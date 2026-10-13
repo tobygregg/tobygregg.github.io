@@ -1,0 +1,8 @@
+{
+  "heading": "Neighbours say it best.",
+  "items": [
+    { "name": "Customer name", "location": "St Sampson", "rating": 5, "text": "Our patio hadn't looked this good since we moved in. Turned up when they said and left it spotless." },
+    { "name": "Customer name", "location": "Vale", "rating": 5, "text": "Gutters were completely blocked. Cleared in an hour and they showed us photos of the problem areas." },
+    { "name": "Customer name", "location": "Property manager", "rating": 5, "text": "We use them for all our rental properties now. Reliable, fairly priced and easy to deal with." }
+  ]
+}

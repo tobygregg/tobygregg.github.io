@@ -1,0 +1,174 @@
+{% extends "layout.njk" %}
+{% from "_macros.njk" import fb, newsCard %}
+{% block content %}
+
+{# ============ HERO (fits one screen on every device) ============
+   Text/buttons: content/hero.json. Van image: hero.van. House art + floating bits: public/images/art/ #}
+<section class="hero relative flex flex-col overflow-hidden text-white">
+  <div class="hero-copy relative z-10 px-4 pt-20 md:px-8 lg:flex lg:flex-1 lg:items-center lg:px-[6vw] lg:pt-16">
+    <div class="lg:w-[54%]">
+      {% if hero.chip %}<p class="mb-4 w-fit rounded-full bg-white/15 px-4 py-1 text-xs font-semibold backdrop-blur sm:text-sm">{{ hero.chip }}</p>{% endif %}
+      <h1 class="hero-title font-extrabold">{{ hero.title }}</h1>
+      <p class="hero-sub mt-4 max-w-md text-base text-white/85 sm:text-lg lg:max-w-lg">{{ hero.text }}</p>
+      <div class="mt-6 flex gap-2 sm:gap-4">
+        <a href="#quote" class="rounded-full bg-white px-6 py-4 text-sm font-bold text-royal shadow-xl transition hover:-translate-y-1 hover:bg-aqua hover:text-ink sm:px-8 sm:text-base">{{ hero.primaryButton }}</a>
+        <a href="tel:{{ site.phone | tel }}" class="rounded-full border-2 border-white/60 px-6 py-4 text-sm font-bold transition hover:bg-white hover:text-royal sm:px-8 sm:text-base">{{ hero.phoneButton }}</a>
+        {% if site.facebook %}<a href="{{ site.facebook }}" target="_blank" rel="noopener noreferrer" aria-label="{{ site.name }} on Facebook" class="grid h-14 w-14 shrink-0 place-items-center rounded-full border-2 border-white/60 transition hover:bg-white hover:text-royal">{{ fb() }}</a>{% endif %}
+      </div>
+    </div>
+  </div>
+
+  <div class="pointer-events-none relative min-h-0 flex-1 lg:absolute lg:inset-y-0 lg:right-0 lg:w-[56%] lg:flex-none" aria-hidden="true">
+    <!-- Bubbles (made by main.js) stay inside this box, behind the house, away from the text -->
+    <div id="bubbles" class="absolute inset-0 overflow-hidden lg:left-[18%]"></div>
+    <div class="glow absolute right-[-10%] top-[5%] h-[90%] w-[90%] lg:right-0 lg:top-[8%] lg:h-[80%] lg:w-[90%]"></div>
+    <img src="{{ hero.houseImage or '/images/art/house.svg' }}" alt="" class="absolute bottom-[8%] right-[-4%] h-[70%] w-auto max-w-none lg:bottom-[9%] lg:right-[4%] lg:h-[72%]">
+    <img src="/images/art/pressure-washer.svg" alt="" class="float absolute left-[2%] top-[2%] w-[40%] lg:left-[1%] lg:top-[14%] lg:w-[30%]" style="--r:-5deg;--d:6s">
+    <img src="/images/art/spray-bottle.svg" alt="" class="float absolute right-[10%] top-[0%] w-[11%] lg:right-[7%] lg:top-[22%] lg:w-[8%]" style="--r:10deg;--d:5s;--delay:-1s">
+    <img src="/images/art/sponge.svg" alt="" class="float absolute bottom-[2%] right-[34%] w-[17%] lg:bottom-[4%] lg:right-[30%] lg:w-[12%]" style="--r:-8deg;--d:7s;--delay:-2s">
+    <img src="/images/art/bucket.svg" alt="" class="float absolute bottom-[1%] right-[3%] w-[19%] lg:bottom-[3%] lg:right-[4%] lg:w-[12%]" style="--r:6deg;--d:6.5s;--delay:-3s">
+    <span class="spark" style="left:46%;top:8%;--s:20px"></span><span class="spark" style="right:30%;top:38%;--s:14px;--delay:-.8s"></span>
+    <span class="spark" style="right:6%;top:30%;--s:24px;--delay:-1.6s"></span><span class="spark" style="left:30%;top:46%;--s:12px;--delay:-.4s"></span>
+  </div>
+
+  <!-- The van waits until it has fully loaded (main.js adds .loaded), then drives in -->
+  <img class="van absolute bottom-3 left-[-4%] z-20 lg:left-[5vw]" src="{{ hero.van }}" alt="{{ site.name }} van" width="1400" height="607" fetchpriority="high" decoding="async">
+  <div class="road absolute inset-x-0 bottom-0 z-10 h-4"></div>
+</section>
+
+{# ============ MARQUEE (built from the service names automatically) ============ #}
+<div class="overflow-hidden bg-ink py-4 text-sm font-bold text-aqua sm:text-base" aria-hidden="true">
+  <div class="marquee gap-8 whitespace-nowrap">
+    {% for pass in [1, 2] %}<span>{% for s in services.items %}{{ s.title }} ✦ {% endfor %}{% for e in services.extras %}{{ e }} ✦ {% endfor %}Free quotes ✦&nbsp;</span>{% endfor %}
+  </div>
+</div>
+
+{# ============ SERVICES (content/services.json). Each card links to its own SEO page ============ #}
+<section id="services" class="bg-ice px-4 py-16 md:px-6 md:py-24">
+  <div class="mx-auto max-w-6xl">
+    <h2 class="h2 max-w-2xl text-navy" data-reveal>{{ services.heading }}</h2>
+    <p class="mt-4 max-w-xl text-lg text-navy/70" data-reveal>{{ services.intro }}</p>
+    {% set spans = ['md:col-span-4','md:col-span-2','md:col-span-2','md:col-span-4','md:col-span-3','md:col-span-3'] %}
+    {% set tones = ['bg-royal','bg-ink','bg-navy'] %}
+    <div class="mt-12 grid gap-4 md:grid-cols-6 md:gap-6">
+      {% for s in services.items %}
+      {% if s.image %}
+      <a href="{{ s.url }}" class="group overflow-hidden rounded-3xl bg-white shadow-[0_16px_40px_-16px_rgba(11,53,196,.3)] {{ spans[loop.index0 % 6] }}" data-reveal>
+        <div class="ph h-52 md:h-64" data-label="{{ s.image }}"><img src="{{ s.image }}" alt="{{ s.title }} in Guernsey" loading="lazy" class="transition duration-700 group-hover:scale-105" onerror="this.remove()"></div>
+        <div class="p-6"><h3 class="font-display text-xl font-extrabold">{{ s.title }}</h3><p class="mt-2 text-navy/70">{{ s.text }}</p><p class="mt-4 font-bold text-volt">Learn more →</p></div>
+      </a>
+      {% else %}
+      <a href="{{ s.url }}" class="group flex flex-col rounded-3xl p-6 text-white {{ tones[(loop.index0 + 2) % 3] }} {{ spans[loop.index0 % 6] }}" data-reveal>
+        <h3 class="font-display text-xl font-extrabold">{{ s.title }}</h3><p class="mt-2 text-white/80">{{ s.text }}</p><p class="mt-auto pt-4 font-bold text-aqua">Learn more →</p>
+      </a>
+      {% endif %}
+      {% endfor %}
+    </div>
+    {% if services.extras.length %}<ul class="mt-8 flex flex-wrap gap-2 text-sm font-semibold text-navy" data-reveal>{% for e in services.extras %}<li class="rounded-full bg-white px-4 py-2">{{ e }}</li>{% endfor %}</ul>{% endif %}
+  </div>
+</section>
+
+{# ============ NEWS: only exists when there is at least one published post (content/news/*.md) ============ #}
+{% if newsHome.length %}
+<section id="news" class="bg-ice px-4 pb-16 md:px-6 md:pb-24">
+  <div class="mx-auto max-w-6xl">
+    <h2 class="h2 max-w-2xl text-navy" data-reveal>{{ newsSettings.heading }}</h2>
+    {% if newsSettings.intro %}<p class="mt-4 max-w-xl text-lg text-navy/70" data-reveal>{{ newsSettings.intro }}</p>{% endif %}
+    <div class="mt-8 grid gap-4 md:gap-6">{% for n in newsHome %}{{ newsCard(n) }}{% endfor %}</div>
+    {% if news.length > newsHome.length %}<a href="/news/" class="mt-8 inline-flex rounded-full bg-royal px-8 py-4 font-bold text-white transition hover:bg-ink">See all news</a>{% endif %}
+  </div>
+</section>
+{% endif %}
+
+{# ============ BEFORE / AFTER (content/results.json). Hidden if the list is empty ============ #}
+{% if results.items.length %}
+<section id="results" class="relative -mt-8 rounded-t-[32px] bg-ink px-4 py-16 text-white md:px-6 md:py-24">
+  <div class="mx-auto max-w-6xl">
+    <h2 class="h2 max-w-2xl" data-reveal>{{ results.heading }}</h2>
+    <div class="mt-12 grid gap-8 md:grid-cols-2">
+      {% for r in results.items %}
+      <figure data-reveal>
+        <div class="ba">
+          <div class="ph absolute inset-0" data-label="{{ r.before }}"><img src="{{ r.before }}" alt="Before: {{ r.caption }}" loading="lazy" onerror="this.remove()"></div>
+          <div class="after ph" data-label="{{ r.after }}"><img src="{{ r.after }}" alt="After: {{ r.caption }}" loading="lazy" onerror="this.remove()"></div>
+          <span class="tag left-4">Before</span><span class="tag right-4">After</span>
+          <div class="bar"></div><input type="range" min="0" max="100" value="50" aria-label="Compare before and after">
+        </div>
+        <figcaption class="mt-4 font-semibold">{{ r.caption }}</figcaption>
+      </figure>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+{# ============ PROCESS (content/process.json) ============ #}
+{% if process.steps.length %}
+<section class="relative -mt-8 rounded-t-[32px] bg-royal px-4 py-16 text-white md:px-6 md:py-24" style="background-image:radial-gradient(50% 60% at 90% 0,#3d8bff55,transparent)">
+  <div class="mx-auto max-w-6xl">
+    <h2 class="h2 max-w-xl" data-reveal>{{ process.heading }}</h2>
+    <ol class="mt-12 grid gap-8 md:grid-cols-3">
+      {% for st in process.steps %}<li data-reveal><span class="outline-num font-display text-7xl font-extrabold">{{ loop.index }}</span><h3 class="mt-2 font-display text-lg font-extrabold">{{ st.title }}</h3><p class="mt-2 text-white/80">{{ st.text }}</p></li>{% endfor %}
+    </ol>
+  </div>
+</section>
+{% endif %}
+
+{# ============ REVIEWS (content/reviews.json) ============ #}
+{% if reviews.items.length %}
+<section id="reviews" class="relative -mt-8 rounded-t-[32px] bg-ice px-4 py-16 md:px-6 md:py-24">
+  <div class="mx-auto max-w-6xl">
+    <h2 class="h2 max-w-2xl text-navy" data-reveal>{{ reviews.heading }}</h2>
+    <div class="mt-12 grid gap-6 md:grid-cols-3">
+      {% for r in reviews.items %}
+      {% set dark = (loop.index0 % 3 == 1) %}
+      <blockquote class="rounded-3xl p-6 {% if dark %}bg-royal text-white{% else %}bg-white shadow-[0_16px_40px_-16px_rgba(11,53,196,.3)]{% endif %}" data-reveal>
+        <p class="{% if dark %}text-aqua{% else %}text-volt{% endif %}" aria-label="{{ r.rating or 5 }} out of 5 stars">{% for i in range(r.rating or 5) %}★{% endfor %}</p>
+        <p class="mt-4 text-lg font-medium">"{{ r.text }}"</p>
+        <footer class="mt-6 text-sm {% if dark %}text-white/70{% else %}text-navy/60{% endif %}">{{ r.name }}{% if r.location %}, {{ r.location }}{% endif %}</footer>
+      </blockquote>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+{# ============ FAQ (content/faq.json) ============ #}
+{% if faq.items.length %}
+<section id="faq" class="bg-ice px-4 pb-16 md:px-6 md:pb-24">
+  <div class="mx-auto max-w-3xl">
+    <h2 class="h2 text-navy" data-reveal>{{ faq.heading }}</h2>
+    <div class="mt-8 divide-y divide-navy/10 rounded-3xl bg-white px-6 shadow-[0_16px_40px_-16px_rgba(11,53,196,.3)]">
+      {% for f in faq.items %}<details class="py-6"><summary class="flex cursor-pointer items-center justify-between gap-4 font-bold">{{ f.question }}<span class="plus text-2xl text-volt transition">+</span></summary><p class="mt-4 text-navy/70">{{ f.answer }}</p></details>{% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+{# ============ QUOTE FORM (content/quote.json). Sends via FormSubmit.co to site.email ============
+   First live submission triggers a one-time activation email to that address. #}
+<section id="quote" class="relative -mt-8 rounded-t-[32px] px-4 py-16 text-white md:px-6 md:py-24" style="background:radial-gradient(60% 60% at 15% 10%,#2a6bff,transparent),linear-gradient(160deg,#0b35c4,#06165c)">
+  <div class="mx-auto grid max-w-6xl gap-12 lg:grid-cols-2">
+    <div data-reveal>
+      <h2 class="h2">{{ quote.heading }}</h2>
+      <p class="mt-4 max-w-md text-white/85">{{ quote.text }}</p>
+      <p class="mt-8 font-display text-2xl font-extrabold"><a href="tel:{{ site.phone | tel }}">{{ site.phone }}</a></p>
+      <p class="mt-2"><a class="underline" href="mailto:{{ site.email }}">{{ site.email }}</a></p>
+    </div>
+    <form id="quote-form" action="https://formsubmit.co/{{ site.email }}" method="POST" class="space-y-4 rounded-3xl bg-white p-6 text-ink shadow-2xl md:p-8" data-reveal>
+      <input type="hidden" name="_subject" value="New quote request from the website">
+      <input type="hidden" name="_captcha" value="false">
+      <input type="hidden" name="_template" value="table">
+      <input type="hidden" name="_next" value="{{ '/thanks.html' | abs }}"><!-- main.js swaps this for the real site address automatically -->
+      <input type="text" name="_honey" class="hidden" tabindex="-1" autocomplete="off"><!-- spam trap -->
+      <label class="block text-sm font-semibold">Name<input required name="name" autocomplete="name" class="mt-2 h-12 w-full rounded-xl border border-navy/15 bg-ice px-4 text-base focus:border-volt focus:outline-none"></label>
+      <label class="block text-sm font-semibold">Phone<input required type="tel" name="phone" autocomplete="tel" class="mt-2 h-12 w-full rounded-xl border border-navy/15 bg-ice px-4 text-base focus:border-volt focus:outline-none"></label>
+      <label class="block text-sm font-semibold">Email<input type="email" name="email" autocomplete="email" class="mt-2 h-12 w-full rounded-xl border border-navy/15 bg-ice px-4 text-base focus:border-volt focus:outline-none"></label>
+      <label class="block text-sm font-semibold">Service
+        <select name="service" class="mt-2 h-12 w-full rounded-xl border border-navy/15 bg-ice px-4 text-base focus:border-volt focus:outline-none">{% for o in quote.services %}<option>{{ o }}</option>{% endfor %}</select></label>
+      <label class="block text-sm font-semibold">Details<textarea name="message" rows="4" class="mt-2 w-full rounded-xl border border-navy/15 bg-ice p-4 text-base focus:border-volt focus:outline-none"></textarea></label>
+      <button type="submit" class="h-14 w-full rounded-full bg-royal font-bold text-white transition hover:bg-ink">{{ quote.button }}</button>
+    </form>
+  </div>
+</section>
+{% endblock %}

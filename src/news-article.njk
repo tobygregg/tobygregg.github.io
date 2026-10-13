@@ -1,0 +1,18 @@
+{% extends "layout.njk" %}
+{% block content %}
+<section class="px-4 pb-16 pt-28 text-white md:px-6" style="background:linear-gradient(160deg,#0b35c4,#06165c)">
+  <div class="mx-auto max-w-3xl">
+    <nav aria-label="Breadcrumb" class="text-sm text-white/70"><a class="hover:text-white" href="/">Home</a> / <a class="hover:text-white" href="/#news">News</a></nav>
+    <p class="mt-4 text-sm font-semibold text-aqua"><time datetime="{{ n.iso }}">{{ n.nice }}</time></p>
+    <h1 class="mt-2 font-display text-3xl font-extrabold leading-tight md:text-5xl">{{ n.title }}</h1>
+    {% if n.summary %}<p class="mt-4 text-lg text-white/85">{{ n.summary }}</p>{% endif %}
+  </div>
+</section>
+<article class="bg-ice px-4 py-16 md:px-6 md:py-24">
+  <div class="mx-auto max-w-3xl">
+    {% if n.image %}<div class="ph mb-12 h-64 rounded-3xl md:h-96" data-label="{{ n.image }}"><img src="{{ n.image }}" alt="{{ n.title }}" onerror="this.remove()"></div>{% endif %}
+    <div class="prose-cms">{{ n.html | safe }}</div>
+    <a href="/#news" class="mt-12 inline-flex rounded-full bg-royal px-8 py-4 font-bold text-white transition hover:bg-ink">← Back to news</a>
+  </div>
+</article>
+{% endblock %}

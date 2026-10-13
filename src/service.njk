@@ -1,0 +1,32 @@
+{% extends "layout.njk" %}
+{# One page per service (generated from content/services.json). Great for Google: "gutter cleaning Guernsey" etc. #}
+{% block content %}
+<section class="px-4 pb-16 pt-28 text-white md:px-6" style="background:radial-gradient(60% 80% at 85% 0,#2a6bff,transparent),linear-gradient(160deg,#0b35c4,#06165c)">
+  <div class="mx-auto max-w-4xl">
+    <nav aria-label="Breadcrumb" class="text-sm text-white/70"><a class="hover:text-white" href="/">Home</a> / <a class="hover:text-white" href="/#services">Services</a> / <span class="text-white">{{ s.title }}</span></nav>
+    <h1 class="mt-4 font-display text-3xl font-extrabold leading-tight md:text-5xl">{{ s.title }} in Guernsey</h1>
+    <p class="mt-4 max-w-2xl text-lg text-white/85">{{ s.text }}</p>
+    <div class="mt-8 flex flex-wrap gap-4">
+      <a href="/#quote" class="rounded-full bg-white px-8 py-4 font-bold text-royal transition hover:bg-aqua hover:text-ink">Get a free quote</a>
+      <a href="tel:{{ site.phone | tel }}" class="rounded-full border-2 border-white/60 px-8 py-4 font-bold transition hover:bg-white hover:text-royal">Call {{ site.phone }}</a>
+    </div>
+  </div>
+</section>
+<section class="bg-ice px-4 py-16 md:px-6 md:py-24">
+  <div class="mx-auto max-w-4xl">
+    {% if s.image %}<div class="ph mb-12 h-64 rounded-3xl md:h-96" data-label="{{ s.image }}"><img src="{{ s.image }}" alt="{{ s.title }} in Guernsey" onerror="this.remove()"></div>{% endif %}
+    {% if s.details %}<div class="prose-cms">{{ s.html | safe }}</div>{% endif %}
+    {% if site.areas.length %}<p class="mt-8 text-navy/70"><strong class="text-navy">Areas covered:</strong> {{ site.areas | join(", ") }} and the rest of Guernsey.</p>{% endif %}
+
+    <h2 class="mt-16 font-display text-2xl font-extrabold text-navy">Other services</h2>
+    <ul class="mt-4 flex flex-wrap gap-2 text-sm font-semibold">
+      {% for o in services.items %}{% if o.slug != s.slug %}<li><a class="block rounded-full bg-white px-4 py-2 text-navy transition hover:bg-royal hover:text-white" href="{{ o.url }}">{{ o.title }}</a></li>{% endif %}{% endfor %}
+    </ul>
+    <div class="mt-12 rounded-3xl bg-royal p-8 text-white">
+      <p class="font-display text-2xl font-extrabold">Want a free quote?</p>
+      <p class="mt-2 text-white/85">Tell us what needs doing and we'll come back with a clear price.</p>
+      <a href="/#quote" class="mt-6 inline-flex rounded-full bg-white px-8 py-4 font-bold text-royal transition hover:bg-aqua hover:text-ink">Get a free quote</a>
+    </div>
+  </div>
+</section>
+{% endblock %}

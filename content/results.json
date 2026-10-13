@@ -1,0 +1,7 @@
+{
+  "heading": "Drag to see the difference.",
+  "items": [
+    { "before": "/images/before-1.jpg", "after": "/images/after-1.jpg", "caption": "Driveway pressure wash, St Peter Port" },
+    { "before": "/images/before-2.jpg", "after": "/images/after-2.jpg", "caption": "House soft wash, Castel" }
+  ]
+}

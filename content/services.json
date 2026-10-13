@@ -1,0 +1,54 @@
+{
+  "heading": "If it's on the outside, we clean it.",
+  "intro": "One local team for the whole exterior. Pick one service or bundle a few for a better price on the day.",
+  "items": [
+    {
+      "title": "Gutter cleaning & survey",
+      "text": "Blocked gutters cause damp, stains and rot. We clear them by hand, flush the downpipes and check for leaks and damage.",
+      "image": "/images/service-gutters.jpg",
+      "details": "Gutters that overflow send water down your walls, which leads to damp, staining and rot. We clear them by hand, flush the downpipes and check joints, brackets and fascias as we go.\n\nYou get a quick photo report of any problem areas, so you know exactly what condition your gutters are in.",
+      "slug": ""
+    },
+    {
+      "title": "House soft wash",
+      "text": "Low-pressure treatment that kills algae and moss at the root. Safe for render, paint and cladding, and it stays clean for years, not weeks.",
+      "image": "",
+      "details": "Soft washing uses low pressure and a biodegradable treatment to kill algae, moss and lichen at the root, rather than blasting the surface. It is safe for render, paint, cladding and uPVC, and results last far longer than pressure washing alone.",
+      "slug": ""
+    },
+    {
+      "title": "Roof cleaning",
+      "text": "Professional, safe moss and lichen removal that protects your tiles.",
+      "image": "/images/service-roof.jpg",
+      "details": "Moss holds moisture against your tiles and can lift them over time. We remove moss and lichen safely and treat the roof to slow regrowth.",
+      "slug": ""
+    },
+    {
+      "title": "Pressure washing",
+      "text": "Patios, driveways, paths and steps brought back to a like-new finish, with patio and driveway restoration.",
+      "image": "/images/service-pressure-wash.jpg",
+      "details": "Patios, driveways, paths and steps restored to a like-new finish. We can also re-sand and seal paving to keep it cleaner for longer.",
+      "slug": ""
+    },
+    {
+      "title": "Repainting",
+      "text": "Once it's clean, we paint it. Exterior walls, fascias and window frames prepped and finished to last.",
+      "image": "",
+      "details": "A clean surface is the best base for paint. We prep properly and finish exterior walls, fascias, soffits and window frames so the job lasts.",
+      "slug": ""
+    },
+    {
+      "title": "Commercial & property management",
+      "text": "Shopfronts, car parks, offices and rental properties, scheduled around your opening hours.",
+      "image": "",
+      "details": "Regular or one-off exterior cleaning for shopfronts, car parks, offices and rental properties, scheduled around your opening hours.",
+      "slug": ""
+    }
+  ],
+  "extras": [
+    "Soffit & fascia clean",
+    "Deck cleaning & repairs",
+    "Facilities management",
+    "Conservatories"
+  ]
+}

@@ -1,0 +1,8 @@
+{% extends "layout.njk" %}
+{% from "_macros.njk" import newsCard %}
+{% block content %}
+<section class="px-4 pb-16 pt-28 text-white md:px-6" style="background:linear-gradient(160deg,#0b35c4,#06165c)">
+  <div class="mx-auto max-w-4xl"><h1 class="font-display text-3xl font-extrabold md:text-5xl">{{ newsSettings.heading }}</h1>{% if newsSettings.intro %}<p class="mt-4 text-lg text-white/85">{{ newsSettings.intro }}</p>{% endif %}</div>
+</section>
+<section class="bg-ice px-4 py-16 md:px-6 md:py-24"><div class="mx-auto grid max-w-4xl gap-4 md:gap-6">{% for n in news %}{{ newsCard(n) }}{% endfor %}</div></section>
+{% endblock %}

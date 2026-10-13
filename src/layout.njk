@@ -1,0 +1,110 @@
+{% from "_macros.njk" import fb %}
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{ page.title }}</title>
+<meta name="description" content="{{ page.description | trim240 }}">
+{% if page.noindex %}<meta name="robots" content="noindex">{% else %}<meta name="robots" content="index, follow, max-image-preview:large">{% endif %}
+<meta name="theme-color" content="#0b35c4">
+<link rel="canonical" href="{{ page.path | abs }}">
+
+<!-- LOCAL SEO -->
+<meta name="geo.region" content="GG">
+<meta name="geo.placename" content="Guernsey">
+
+<!-- FAVICON + APP ICONS (files live in /public/images) -->
+<link rel="icon" href="/images/favicon-32.png" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+
+<!-- OPEN GRAPH / SOCIAL PREVIEW -->
+<meta property="og:type" content="{% if page.article %}article{% else %}website{% endif %}">
+<meta property="og:locale" content="en_GB">
+<meta property="og:site_name" content="{{ site.name }}">
+<meta property="og:title" content="{{ page.title }}">
+<meta property="og:description" content="{{ page.description | trim240 }}">
+<meta property="og:url" content="{{ page.path | abs }}">
+<meta property="og:image" content="{{ page.image | abs }}">
+<meta name="twitter:card" content="summary_large_image">
+
+{% if page.home %}<link rel="preload" as="image" href="{{ hero.van }}" fetchpriority="high">{% endif %}
+<link rel="stylesheet" href="/css/styles.css">
+<noscript><style>.van{opacity:1!important;animation:none!important}[data-reveal]{opacity:1!important;transform:none!important}</style></noscript>
+
+{% for o in page.ld %}<script type="application/ld+json">{{ o | json | safe }}</script>
+{% endfor %}
+</head>
+<body>
+
+{# ============ ANNOUNCEMENT BANNER: only appears when text is set in the CMS ============ #}
+{% if banner.text %}
+<div id="banner" class="relative z-[60] bg-aqua px-4 py-2 text-center text-sm font-semibold text-ink">
+  {{ banner.text }}
+  {% if banner.link and banner.linkText %}<a href="{{ banner.link }}" class="ml-2 whitespace-nowrap font-bold underline">{{ banner.linkText }} →</a>{% endif %}
+</div>
+{% endif %}
+
+{# ============ HEADER / NAV ============ #}
+<header id="header" class="fixed inset-x-0 top-0 z-50 text-white backdrop-blur transition-colors {% if page.solid %}bg-navy{% endif %}">
+  <div class="flex h-16 items-center justify-between px-4 md:px-8 lg:px-[6vw]">
+    <a href="/" class="flex items-center gap-2 font-display text-sm font-extrabold sm:text-base" aria-label="{{ site.name }} home">
+      <img src="{{ site.logo }}" alt="" width="32" height="32" class="h-8 w-8 rounded-lg">
+      <span class="whitespace-nowrap leading-[1.1]">External Clean<br class="sm:hidden"> <span class="text-aqua">Guernsey</span></span>
+    </a>
+    <nav class="hidden items-center gap-8 text-sm font-semibold md:flex" aria-label="Main">
+      <a class="hover:text-aqua" href="/#services">Services</a>
+      {% if news.length %}<a class="hover:text-aqua" href="/#news">News</a>{% endif %}
+      {% if results.items.length %}<a class="hover:text-aqua" href="/#results">Results</a>{% endif %}
+      {% if reviews.items.length %}<a class="hover:text-aqua" href="/#reviews">Reviews</a>{% endif %}
+      {% if faq.items.length %}<a class="hover:text-aqua" href="/#faq">FAQ</a>{% endif %}
+      {% if site.facebook %}<a href="{{ site.facebook }}" target="_blank" rel="noopener noreferrer" aria-label="{{ site.name }} on Facebook" class="grid h-10 w-10 place-items-center rounded-full border border-white/30 transition hover:bg-white hover:text-royal">{{ fb() }}</a>{% endif %}
+      <a href="/#quote" class="rounded-full bg-white px-6 py-2 font-bold text-royal transition hover:bg-aqua hover:text-ink">Free quote</a>
+    </nav>
+    <div class="flex items-center gap-2 md:hidden">
+      {% if site.facebook %}<a href="{{ site.facebook }}" target="_blank" rel="noopener noreferrer" aria-label="{{ site.name }} on Facebook" class="grid h-12 w-12 place-items-center rounded-full border border-white/30">{{ fb() }}</a>{% endif %}
+      <button id="menu-btn" class="grid h-12 w-12 place-items-center rounded-full border border-white/30 text-xl" aria-label="Menu" aria-expanded="false" aria-controls="menu">☰</button>
+    </div>
+  </div>
+  <nav id="menu" class="hidden border-t border-white/10 bg-navy px-4 py-4 md:hidden" aria-label="Mobile">
+    <a class="block py-3 text-lg font-semibold" href="/#services">Services</a>
+    {% if news.length %}<a class="block py-3 text-lg font-semibold" href="/#news">News</a>{% endif %}
+    {% if results.items.length %}<a class="block py-3 text-lg font-semibold" href="/#results">Results</a>{% endif %}
+    {% if reviews.items.length %}<a class="block py-3 text-lg font-semibold" href="/#reviews">Reviews</a>{% endif %}
+    {% if faq.items.length %}<a class="block py-3 text-lg font-semibold" href="/#faq">FAQ</a>{% endif %}
+    <a class="mt-2 block rounded-full bg-white py-4 text-center font-bold text-royal" href="/#quote">Get a free quote</a>
+  </nav>
+</header>
+
+<main id="top">
+{% block content %}{% endblock %}
+</main>
+
+{# ============ FOOTER ============ #}
+<footer class="bg-ink px-4 py-12 text-sm text-white/70 md:px-6">
+  <div class="mx-auto max-w-6xl">
+    <div class="flex flex-col gap-6 md:flex-row md:items-start md:justify-between">
+      <div>
+        <p class="flex items-center gap-2 font-display font-extrabold text-white"><img src="{{ site.logo }}" alt="" width="32" height="32" class="h-8 w-8 rounded-lg">{{ site.name }}</p>
+        {% if site.footerNote %}<p class="mt-2">{{ site.footerNote }}</p>{% endif %}
+      </div>
+      <div>
+        <p class="font-bold text-white">Services</p>
+        <ul class="mt-2 space-y-1">{% for s in services.items %}<li><a class="hover:text-white" href="{{ s.url }}">{{ s.title }}</a></li>{% endfor %}</ul>
+      </div>
+      <div>
+        <p class="font-bold text-white">Get in touch</p>
+        <p class="mt-2"><a class="hover:text-white" href="tel:{{ site.phone | tel }}">{{ site.phone }}</a></p>
+        <p><a class="hover:text-white" href="mailto:{{ site.email }}">{{ site.email }}</a></p>
+        {% if site.facebook %}<p><a class="hover:text-white" href="{{ site.facebook }}" target="_blank" rel="noopener noreferrer">Facebook</a></p>{% endif %}
+      </div>
+    </div>
+    {% if site.areas.length %}<p class="mt-8 border-t border-white/10 pt-6">Serving {{ site.areas | join(", ") }} and all of Guernsey.</p>{% endif %}
+    <p class="mt-4">© {{ year }} {{ site.name }}. {{ site.address }}.</p>
+  </div>
+</footer>
+
+<script src="/js/main.js"></script>
+</body>
+</html>
