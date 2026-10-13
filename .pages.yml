@@ -1,0 +1,178 @@
+# PAGES CMS CONFIG: this file builds the client's editing dashboard (https://pagescms.org).
+# Every file listed under "content" shows up as a form. Saving commits to GitHub, and the host rebuilds the site automatically.
+
+media:
+  input: public/images        # where uploaded photos are stored in the repo
+  output: /images             # how the site refers to them
+
+content:
+  # ------------------------------------------------------------------ BANNER
+  - name: banner
+    label: Announcement banner
+    type: file
+    path: content/banner.json
+    format: json
+    fields:
+      - { name: text, label: Banner text, type: string, description: "Leave EMPTY to hide the banner. e.g. 'Bank holiday: we are booking for next week'" }
+      - { name: linkText, label: Link text (optional), type: string, description: "e.g. Get a quote" }
+      - { name: link, label: Link address (optional), type: string, description: "e.g. /#quote or tel:07781122348" }
+
+  # ------------------------------------------------------------------ NEWS
+  - name: news
+    label: News posts
+    type: collection
+    path: content/news
+    format: yaml-frontmatter
+    filename: "{primary}.md"
+    subfolders: false
+    view:
+      fields: [title, date, published]
+      primary: title
+      sort: [date, title]
+      default: { sort: date, order: desc }
+    fields:
+      - { name: title, label: Title, type: string, required: true }
+      - { name: date, label: Date, type: date, required: true }
+      - { name: summary, label: Short description, type: text, description: "Shown on the homepage card. If empty, the start of the main text is used." }
+      - { name: image, label: Image (optional), type: image, description: "If set, the image appears on the right of the card. If empty, a text-only card is shown." }
+      - { name: published, label: Published, type: boolean, default: true, description: "Untick to hide this post without deleting it." }
+      - { name: body, label: Full article (optional), type: rich-text, description: "If filled in, a 'Read more' link and a full article page are created." }
+
+  # ------------------------------------------------------------------ HOMEPAGE
+  - name: hero
+    label: Homepage top section (hero)
+    type: file
+    path: content/hero.json
+    format: json
+    fields:
+      - { name: chip, label: Small label above the title, type: string }
+      - { name: title, label: Main title, type: string, required: true }
+      - { name: text, label: Description, type: text }
+      - { name: primaryButton, label: Quote button text, type: string }
+      - { name: phoneButton, label: Call button text, type: string }
+      - { name: van, label: Van image, type: image, description: "Transparent PNG/WebP of the van facing right. Keep under 200KB." }
+      - { name: houseImage, label: House illustration (optional), type: image }
+
+  - name: services
+    label: Services
+    type: file
+    path: content/services.json
+    format: json
+    fields:
+      - { name: heading, label: Section heading, type: string }
+      - { name: intro, label: Intro text, type: text }
+      - name: items
+        label: Services
+        type: object
+        list: true
+        fields:
+          - { name: title, label: Title, type: string, required: true }
+          - { name: text, label: Short description (card + Google), type: text }
+          - { name: image, label: Photo (optional), type: image }
+          - { name: details, label: Full description for this service's own page, type: rich-text, description: "Good for Google: describe the work, the problems it solves and the areas you cover." }
+          - { name: slug, label: Page address (leave empty), type: string, description: "Leave empty. It is made from the title automatically." }
+      - { name: extras, label: Extra services (small tags), type: string, list: true }
+
+  - name: results
+    label: Before and after photos
+    type: file
+    path: content/results.json
+    format: json
+    fields:
+      - { name: heading, label: Section heading, type: string }
+      - name: items
+        label: Sliders (empty list hides the section)
+        type: object
+        list: true
+        fields:
+          - { name: before, label: Before photo, type: image }
+          - { name: after, label: After photo, type: image, description: "Take it from the SAME spot as the before photo." }
+          - { name: caption, label: Caption, type: string }
+
+  - name: process
+    label: How it works (3 steps)
+    type: file
+    path: content/process.json
+    format: json
+    fields:
+      - { name: heading, label: Section heading, type: string }
+      - name: steps
+        label: Steps
+        type: object
+        list: true
+        fields:
+          - { name: title, label: Title, type: string }
+          - { name: text, label: Text, type: text }
+
+  - name: reviews
+    label: Customer reviews
+    type: file
+    path: content/reviews.json
+    format: json
+    fields:
+      - { name: heading, label: Section heading, type: string }
+      - name: items
+        label: Reviews (empty list hides the section)
+        type: object
+        list: true
+        fields:
+          - { name: name, label: Customer name, type: string }
+          - { name: location, label: Area (optional), type: string }
+          - { name: rating, label: Stars (1 to 5), type: number, default: 5 }
+          - { name: text, label: Review, type: text }
+
+  - name: faq
+    label: Questions and answers
+    type: file
+    path: content/faq.json
+    format: json
+    fields:
+      - { name: heading, label: Section heading, type: string }
+      - name: items
+        label: Questions (empty list hides the section)
+        type: object
+        list: true
+        fields:
+          - { name: question, label: Question, type: string }
+          - { name: answer, label: Answer, type: text }
+
+  - name: quote
+    label: Quote form section
+    type: file
+    path: content/quote.json
+    format: json
+    fields:
+      - { name: heading, label: Heading, type: string }
+      - { name: text, label: Text, type: text }
+      - { name: services, label: Service choices in the dropdown, type: string, list: true }
+      - { name: button, label: Button text, type: string }
+
+  - name: news-settings
+    label: News section settings
+    type: file
+    path: content/news-settings.json
+    format: json
+    fields:
+      - { name: heading, label: Section heading, type: string }
+      - { name: intro, label: Intro text (optional), type: text }
+      - { name: limit, label: How many posts on the homepage, type: number, default: 3 }
+
+  # ------------------------------------------------------------------ SITE-WIDE
+  - name: site
+    label: Business details, logo and SEO
+    type: file
+    path: content/site.json
+    format: json
+    fields:
+      - { name: name, label: Business name, type: string }
+      - { name: url, label: Website address, type: string, description: "e.g. https://www.externalcleanguernsey.com (no slash at the end)" }
+      - { name: phone, label: Phone number, type: string }
+      - { name: email, label: Email (quote forms are sent here), type: string }
+      - { name: facebook, label: Facebook page link, type: string }
+      - { name: address, label: Location line, type: string }
+      - { name: logo, label: Logo, type: image }
+      - { name: shareImage, label: Image shown when the site is shared (1200x630), type: image }
+      - { name: seoTitle, label: Google title (homepage), type: string, description: "Aim for under 60 characters." }
+      - { name: seoDescription, label: Google description (homepage), type: text, description: "Aim for 120-160 characters." }
+      - { name: areas, label: Areas covered (helps local Google results), type: string, list: true }
+      - { name: footerNote, label: Footer line, type: string }
