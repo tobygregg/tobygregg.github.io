@@ -5,15 +5,35 @@ const fs = require('fs'), path = require('path'), { execSync } = require('child_
 const nunjucks = require('nunjucks'), matter = require('gray-matter'), { marked } = require('marked');
 
 const ROOT = __dirname, DIST = path.join(ROOT, 'dist'), C = path.join(ROOT, 'content');
-const readJSON = f => JSON.parse(fs.readFileSync(path.join(C, f), 'utf8'));
+// Reads a content file. If the CMS saves it empty, deletes it or leaves it invalid, we fall back to safe defaults
+// instead of crashing the build (a crashed build means the OLD site, banner and all, stays live).
+const LIST_KEYS = ['items', 'steps', 'extras', 'areas', 'services'];
+const readJSON = (f, defaults = {}) => {
+  let parsed = {};
+  try { parsed = JSON.parse(fs.readFileSync(path.join(C, f), 'utf8')) || {}; }
+  catch (e) { console.warn(`Note: content/${f} is empty or missing (${e.code || e.message}), using defaults.`); }
+  const out = { ...defaults, ...parsed };
+  for (const k of LIST_KEYS) if (k in out && !Array.isArray(out[k])) out[k] = [];
+  return out;
+};
 const slugify = s => String(s).toLowerCase().replace(/&/g, 'and').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
 const write = (rel, data) => { const f = path.join(DIST, rel); fs.mkdirSync(path.dirname(f), { recursive: true }); fs.writeFileSync(f, data); };
 
 // ---------- load content ----------
-const site = readJSON('site.json'); site.url = site.url.replace(/\/$/, '');
-const data = { site, banner: readJSON('banner.json'), hero: readJSON('hero.json'), services: readJSON('services.json'),
-  results: readJSON('results.json'), process: readJSON('process.json'), reviews: readJSON('reviews.json'),
-  faq: readJSON('faq.json'), quote: readJSON('quote.json'), newsSettings: readJSON('news-settings.json') };
+const site = readJSON('site.json', { areas: [] }); site.url = String(site.url || '').replace(/\/$/, '');
+const data = { site,
+  banner: readJSON('banner.json', { text: '', linkText: '', link: '' }),
+  hero: readJSON('hero.json', { van: '/images/van.webp' }),
+  services: readJSON('services.json', { items: [], extras: [] }),
+  results: readJSON('results.json', { items: [] }),
+  process: readJSON('process.json', { steps: [] }),
+  reviews: readJSON('reviews.json', { items: [] }),
+  faq: readJSON('faq.json', { items: [] }),
+  quote: readJSON('quote.json', { services: [] }),
+  newsSettings: readJSON('news-settings.json', { heading: 'Latest news', intro: '', limit: 3 }) };
+
+// Banner: spaces/blank lines count as empty, so nothing shows
+['text', 'linkText', 'link'].forEach(k => { data.banner[k] = String(data.banner[k] || '').trim(); });
 
 // services: give each a URL (own page)
 data.services.items.forEach(s => { s.slug = slugify(s.slug || s.title); s.url = `/services/${s.slug}/`; s.html = marked.parse(s.details || ''); });
